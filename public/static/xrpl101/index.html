@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>XRPL - Intro</title>
+
+		<meta name="description" content="XRPL Intro">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/night.css" id="theme">
+		<link rel="stylesheet" href="css/custom.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<a href="https://xrpl.org">
+						<img src="assets/images/XRPL_black.png" alt="reveal.js logo" style="height: 180px; margin: 0 auto 4rem auto; background: transparent;" class="demo-logo">
+					</a>
+					<h3>XRP Ledger 101</h3>
+					<p class="fs-12">Basic concepts about the XRP Ledger</p>
+					<p class="fs-10 cursive light">
+						Use your left and right arrows to move along slides
+					</p>
+				</section>
+
+				<section>
+					<h2>XRP Ledger APIs Overview</h2>
+					<p>Connecting to rippled</p>
+					<div style="display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: 2rem;
+					border-top: 1px solid rgba(255, 255, 255, 0.1);
+					margin-top: 1.5rem;
+					padding-top: 1.5rem;">
+					</div>
+					<p><small>
+						Complete documentation: <a href="https://xrpl.org" title="xrpl.org">xrpl.org</a>
+					</small></p>
+				</section>
+
+				<section>
+					<h2>Before We Begin...</h2>
+					<p>We will need <span class="highlight-1">XRP</span> for API examples that follow.</p>
+					<p>We will use the <span class="highlight-2">XRPL Test Net</span>, where we can allocate ourselves some test XRP.</p>
+					<div style="display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: 2rem;
+					border-top: 1px solid rgba(255, 255, 255, 0.1);
+					margin-top: 1.5rem;
+					padding-top: 1.5rem;">
+					</div>
+					<p><small>Unlike XRP on the live network, Test Net funds have no real value. The Test Net ledger and balances are reset frequently.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#328adb" data-background-transition="zoom">
+					<h3>Test Net XRP</h3>
+					<p>
+						A Test Net account can be generated manually on <a href="https://xrpl.org/resources/dev-tools/xrp-faucets" title="XRPL Faucets">xrpl.org</a>,
+					</p>
+					<p>or programatically via an HTTP request:</p>
+					<pre data-id="code-animation"><code class="" data-trim>
+						curl -X POST https://faucet.altnet.rippletest.net/accounts
+					</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#328adb">
+					<h3 data-id="code-title">Example response:</h3>
+					<pre data-id="code-animation"><code class="hljs json fs-12"><script type="text/template">
+{
+	"account": {
+		"xAddress"      : "XVSAiwsdfBr2A6qUa3261AT9bEUn9m62fFuwAxr8RRCwsZb",
+		"address"       : "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP"             ,
+		"classicAddress": "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP"
+	},
+	"amount": 100,
+	"transactionHash": "0ADE567E26F5CE403BBFF8552EE198E3AEAEC7E9E15060B521846C0A40FA1A37",
+	"seed": "sEdSApaCV9exNCXiuUxYhBTpTHqtNi1"
+}
+					</script></code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#328adb">
+					<h3 data-id="code-title">Example response:</h3>
+					<pre data-id="code-animation"><code class="hljs json fs-12" data-line-numbers="3-5"><script type="text/template">{
+	"account": {
+		"xAddress"      : "XVSAiwsdfBr2A6qUa3261AT9bEUn9m62fFuwAxr8RRCwsZb",
+		"address"       : "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP",
+		"classicAddress": "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP"
+	},
+	"amount": 100,
+	"transactionHash": "0ADE567E26F5CE403BBFF8552EE198E3AEAEC7E9E15060B521846C0A40FA1A37",
+	"seed": "sEdSApaCV9exNCXiuUxYhBTpTHqtNi1"
+}
+					</script></code></pre>
+					<p><small>The response gives a <span class="highlight-5">unique address</span> for the <span class="highlight-5">account</span>.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#328adb">
+					<h3 data-id="code-title">Example response:</h3>
+					<pre data-id="code-animation"><code class="hljs json" style="font-size: 12pt" data-line-numbers="9"><script type="text/template">{
+	"account": {
+		"xAddress"      : "XVSAiwsdfBr2A6qUa3261AT9bEUn9m62fFuwAxr8RRCwsZb",
+		"address"       : "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP",
+		"classicAddress": "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP"
+	},
+	"amount": 100,
+	"transactionHash": "0ADE567E26F5CE403BBFF8552EE198E3AEAEC7E9E15060B521846C0A40FA1A37",
+	"seed": "sEdSApaCV9exNCXiuUxYhBTpTHqtNi1"
+}
+					</script></code></pre>
+					<p><small>And a <span class="highlight-5">secret</span> that will allow us to transact with this <span class="highlight-5">account</span>.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#328adb">
+					<h3 data-id="code-title">Example response:</h3>
+					<pre data-id="code-animation"><code class="hljs json" style="font-size: 12pt" data-line-numbers="4"><script type="text/template">{
+	"account": {
+		"xAddress"      : "XVSAiwsdfBr2A6qUa3261AT9bEUn9m62fFuwAxr8RRCwsZb",
+		"address"       : "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP",
+		"classicAddress": "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP"
+	},
+	"amount": 100,
+	"transactionHash": "0ADE567E26F5CE403BBFF8552EE198E3AEAEC7E9E15060B521846C0A40FA1A37",
+	"seed": "sEdSApaCV9exNCXiuUxYhBTpTHqtNi1"
+}
+					</script></code></pre>
+					<p><small>The <span class="highlight-5">address</span> is derived from a <span class="highlight-5">public key</span>.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#328adb">
+					<h3 data-id="code-title">Example response:</h3>
+					<pre data-id="code-animation"><code class="hljs json fs-12" data-line-numbers="9"><script type="text/template">{
+	"account": {
+		"xAddress"      : "XVSAiwsdfBr2A6qUa3261AT9bEUn9m62fFuwAxr8RRCwsZb",
+		"address"       : "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP",
+		"classicAddress": "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP"
+	},
+	"amount": 100,
+	"transactionHash": "0ADE567E26F5CE403BBFF8552EE198E3AEAEC7E9E15060B521846C0A40FA1A37",
+	"seed": "sEdSApaCV9exNCXiuUxYhBTpTHqtNi1"
+}
+					</script></code></pre>
+					<p><small>The <span class="highlight-5">secret</span> is derived from the corresponding <span class="highlight-5">private key</span>.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#328adb">
+					<h3 data-id="code-title">Example response:</h3>
+					<pre data-id="code-animation"><code class="hljs json fs-12" data-line-numbers="7"><script type="text/template">{
+	"account": {
+		"xAddress"      : "XVSAiwsdfBr2A6qUa3261AT9bEUn9m62fFuwAxr8RRCwsZb",
+		"address"       : "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP",
+		"classicAddress": "rJcd2Wbt6SmQiLnwiBgDRw8cgFbCW9UiCP"
+	},
+	"amount": 100,
+	"transactionHash": "0ADE567E26F5CE403BBFF8552EE198E3AEAEC7E9E15060B521846C0A40FA1A37",
+	"seed": "sEdSApaCV9exNCXiuUxYhBTpTHqtNi1"
+}
+					</script></code></pre>
+					<p><small>The balance indicates that the account was initially funded with 100 XRP.</small></p>
+					<div style="display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: 2rem;
+					border-top: 1px solid rgba(255, 255, 255, 0.1);
+					margin-top: 1.5rem;
+					padding-top: 1.5rem;">
+					</div>
+					<p><small>Remember that on the Test Net XRP have no real value.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<p>
+						<span class="highlight-3">server_info</span> is a rippled command.
+					</p>
+					<p>
+						<small>A response confirms that an application can reach rippled and indicates whether the rippled server is in sync with the rest of the network</small>
+					</p>
+					<p>
+						<small>
+						rippled offers three ways to invoke commands such as server_info:
+						</small>
+					</p>
+					<p>
+						<ul>
+							<li>WebSocket</li>
+							<li>JSON-RPC</li>
+							<li>Command Line</li>
+						</ul>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">Command line</h3>
+					<p>
+						<small>
+						rippled features are available through a command line interface, only when you are running an instance of rippled on your local machine.
+						</small>
+					</p>
+					<p>
+						<small>
+							To invoke the <span class="highlight-4">server_info</span> command, for example:
+						</small>
+					</p>
+					<pre data-id="code-animation"><code class="" data-trim>
+						rippled server_info
+					</code></pre>
+				</section>
+
+				<section data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">JSON-RPC</h3>
+					<p>
+						<small>
+							Applications may also <span class="highlight-4">POST</span> Remote Procedure Calls (RPC) to rippled.
+						</small>
+					</p>
+					<pre data-id="code-animation"><code class="" data-trim>curl -s -X POST "$RIPPLED_RPC" -d @- <<-END
+{
+    "method": "server_info",
+    "params": [ {} ]
+}
+END
+					</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">Websockets</h3>
+					<p>
+						<small>
+							WebSockets allow applications to submit multiple requests over a long-lived connection.
+						</small>
+						<small>Requests may receive multiple responses, or subscribe to events.</small>
+						<small>To invoke <span class="highlight-4">server_info</span>, <span class="highlight-4">POST</span>:</small>
+					</p>
+					<pre data-id="code-animation"><code class="" data-trim>{
+	"id": 1,
+	"command": "server_info"
+}
+					</code></pre>
+					<p><small>The response will include the same id that was passed in. Your application should give each request a <span class="highlight-4">unique id</span>.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">SDK's</h3>
+					<p>
+						<small>
+							There are XRP Ledger SDK's available for many programming languages:
+						</small>
+					</p>
+					<ul>
+						<li><a href="#">Javascript</a></li>
+						<li><a href="#">Python</a></li>
+						<li><a href="#">Java</a></li>
+						<li><a href="#">Go</a></li>
+						<li><a href="#">Rust</a></li>
+					</ul>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">SDK's</h3>
+					<p class="fs-12">
+						This boilerplate shows the <span class="highlight-4 cursive">connect()</span> method in <span class="highlight-4">Javascript</span>:
+						<pre data-id="code-animation"><code class="fs-10" data-trim>const xrpl = require("xrpl");
+async function main() {
+	const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
+	await client.connect();
+	...
+	client.disconnect();
+}
+main();
+						</code></pre>
+						<span class="fs-12">After <span class="highlight-4 cursive">connect()</span>, other methods may be invoked.</span>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">SDK's</h3>
+					<p class="fs-12">
+						Similarly, the following code in <span class="highlight-4">Java</span> constructs a client object and connects to a XRPL node:
+						<pre data-id="code-animation"><code class="fs-10 hljs java" data-trim>XrplClient mainnetClient = XrplEnvironment.getConfiguredMainnetEnvironment().getXrplClient();
+						</code></pre>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">SDK's</h3>
+					<p class="fs-12">
+						<span class="highlight-4 cursive">getServerInfo()</span> in <span class="highlight-4">xrpl.js</span> corresponds to rippled's server_info:
+						<pre data-id="code-animation"><code class="fs-10 javascript" data-trim>const client = new xrpl.Client("wss://s.altnet.rippletest.net:51233");
+await client.connect();
+const ledger = await client.request({
+    command: 'server_info'
+  })
+client.disconnect();
+						</code></pre>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#26944b">
+					<h2>Connect to rippled</h2>
+					<h3 class="fs-34 highlight-3">SDK's</h3>
+					<p class="fs-12">
+						<pre data-id="code-animation"><code class="fs-10 javascript" data-line-numbers="4" data-trim>{
+"result": {
+	"info": {
+		"complete_ledgers": "209-1729407",
+		"load_factor": 1,
+		"time": "2024-Oct-23 16:18:32.562395 UTC",
+		"uptime": 443,
+		"clio_version": "2.2.5",
+		"libxrpl_version": "2.2.0",
+		"validated_ledger": {
+			...
+		},
+		"cache": {
+			...
+		},
+		"validation_quorum": 5,
+		"rippled_version": "2.2.2",
+		"network_id": 1
+	},
+	"validated": true,
+	"status": "success"
+},
+}
+						</code></pre>
+						<small>Fields including <span class="highlight-4 cursive">completeLedgers</span>, <span class="highlight-4 cursive">peers</span>, and <span class="highlight-4 cursive">serverState</span> make <span class="highlight-4 cursive">server_info</span> useful when troubleshooting <span class="highlight-4">rippled</span> issues.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#3e7aab" data-background-transition="zoom">
+					<h2>Query Ledger Data</h2>
+					<h3 class="highlight-3">Account Info</h3>
+					<p class="fs-12">
+						The <span class="highlight-5 cursive">account_info</span> command retrieves information about an account, its activity, and its XRP balance.
+					</p>
+					<p class="fs-12">
+						Most commands, including <span class="highlight-5 cursive">account_info</span>, can be invoked via rippled <span class="highlight-5">WebSockets</span> or <span class="highlight-5">JSON-RPC</span>, or via <span class="highlight-5">JavaScript</span>.
+					</p>
+					<pre data-id="code-animation"><code class="fs-10" data-trim>curl -s -X POST "$RIPPLED_RPC" -d @- <<-END
+{
+    "method": "account_info",
+    "params": [{ "account": "$ADDRESS" }]
+}
+END
+					</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#3e7aab">
+					<h2>Query Ledger Data</h2>
+					<h3 class="highlight-3">Account Info</h3>
+					<p class="fs-12">
+						<span class="highlight-3">Sequence</span> orders transactions submitted by this account.
+					</p>
+					<pre data-id="code-animation"><code class="fs-10" data-trim data-line-numbers="11">{
+"result": {
+	"account_data": {
+		"Account": "rhi9w4Nye3zAPj9HZNkm5BrhFTkDtXKQeN",
+		"Balance": "1000000",
+		"Flags": 0,
+		"LedgerEntryType": "AccountRoot",
+		"OwnerCount": 4,
+		"PreviousTxnID": "80DBF7F4D9F6AA23E76149D1A3301CCE9570CAD861DDFE15D6398DA15EFAB8B7",
+		"PreviousTxnLgrSeq": 1571775,
+		"Sequence": 1568710,
+		"index": "20F849DF8101A189974D23DFC808BB9F7065A9C5AC12DC591F0417735718A79D"
+	},
+	"account_flags": {
+		...
+	},
+	"ledger_current_index": 1833845,
+	"status": "success",
+	"validated": false
+}
+}
+					</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#3e7aab">
+					<h2>Query Ledger Data</h2>
+					<h3 class="subtitle">Account Info</h3>
+					<p class="fs-12">
+						Balance shows XRP (<span class="cursive">in drops</span>) owned by this account. (<span class="cursive">1 XRP == 1,000,000 drops</span>)
+					</p>
+					<pre data-id="code-animation"><code class="fs-10" data-trim data-line-numbers="5">{
+"result": {
+	"account_data": {
+		"Account": "rhi9w4Nye3zAPj9HZNkm5BrhFTkDtXKQeN",
+		"Balance": "1000000",
+		"Flags": 0,
+		"LedgerEntryType": "AccountRoot",
+		"OwnerCount": 4,
+		"PreviousTxnID": "80DBF7F4D9F6AA23E76149D1A3301CCE9570CAD861DDFE15D6398DA15EFAB8B7",
+		"PreviousTxnLgrSeq": 1571775,
+		"Sequence": 1568710,
+		"index": "20F849DF8101A189974D23DFC808BB9F7065A9C5AC12DC591F0417735718A79D"
+	},
+	"account_flags": {
+		...
+	},
+	"ledger_current_index": 1833845,
+	"status": "success",
+	"validated": false
+}
+}
+					</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#3e7aab">
+					<h2>Query Ledger Data</h2>
+					<p>
+						We've seen that <span class="highlight-3">server_info</span> and <span class="highlight-3">account_info</span> are commands which return information about the XRPL network.
+					</p>
+					<p>
+						There are many more commands, which are invoked in similar ways. In-depth documentation is found on <a href="https://xrpl.org/docs" title="xrpl.org docs" target="_blank">xrpl.org/docs</a>
+					</p>
+				</section>
+
+				<section data-auto-animate  data-background="#89960c" data-background-transition="zoom">
+					<h2>Write Ledger Data</h2>
+					<p>
+						A <a href="https://xrpl.org/docs/references/protocol/transactions" title="xrpl.org Transaction" target="_blank" class="highlight-6">transaction</a> is the only way to modify the XRP Ledger.
+					</p>
+					<p>
+						Transactions are only valid if signed, submitted, and accepted into a validated ledger version following the <a href="https://xrpl.org/docs/concepts/consensus-protocol" title="xrpl.org consensus" class="highlight-6" target="_blank">consensus process</a>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<p>
+						There are several <a href="https://xrpl.org/docs/references/protocol/transactions/types" title="xrpl.org Transaction types" class="highlight-6" target="_blank">transaction types</a> which have a variety of effects on the ledger.
+					</p>
+					<p>
+						Payment is the transaction type we'll show next...
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<p>
+						A <a href="https://xrpl.org/docs/references/protocol/transactions/types/payment" title="xrpl.org Payment Transaction" class="highlight-6" target="_blank">Payment transaction</a> represents a transfer of value from one account to another.
+					</p>
+					<p>
+						Payments are also the only way to <a href="https://xrpl.org/docs/concepts/accounts#creating-accounts" title="xrpl.org Creating accounts" class="highlight-6" target="_blank">create accounts</a>.
+					</p>
+					<p><small>The following slides will show how this is done...</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<p>
+						<small>We begin by creating a new address to receive the payment...</small>
+						<small>rippled provides <a href="https://xrpl.org/docs/references/http-websocket-apis/admin-api-methods/key-generation-methods/wallet_propose" class="highlight-6" target="_blank" title="xrpl.org Wallet propose">wallet_propose</a> to create a new address.</small>
+						<small><span class="highlight-6">XrplJS (JavaScript)</span> provides <span class="highlight-7 cursive">Wallet.generate()</span>.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10" data-trim data-line-numbers="5">const { Wallet } = require('xrpl')
+const wallet = Wallet.generate()
+					</code></pre>
+					<p><small>Note that it can be called without <span class="highlight-7 cursive">client.connect()</span>.</small></p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<p>
+						<small>This is the output</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10">{
+	"result": {
+		"account_id": "rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh",
+		"key_type": "secp256k1",
+		"master_key": "I IRE BOND BOW TRIO LAID SEAT GOAL HEN IBIS IBIS DARE",
+		"master_seed": "snoPBrXtMeMyMHUVTgbuqAfg1SUTb",
+		"master_seed_hex": "DEDCE9CE67B451D852FD4E846FCDE31C",
+		"public_key": "aBQG8RQAzjs1eTKFEAQXr2gS4utcDiEC9wmi7pfUPTi27VCahwgw",
+		"public_key_hex": "0330E7FC9D56BB25D6893BA3F317AE5BCF33B3291BD63DB32654A313222F7FD020",
+		"status": "success"
+	}
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<p>
+						<small>Here is an example of a prepared Payment transaction:</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 ">{
+	"TransactionType": "Payment",
+	"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+	"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+	"Amount": "100000000",
+	"LastLedgerSequence": 980123198,
+	"Fee": "12",
+	"Flags": 2147483648,
+	"Sequence": 2,
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<pre data-id="code-animation"><code class="fs-10" data-line-numbers="2,3,6,7,8,9">{
+	"TransactionType": "Payment",
+	"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+	"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+	"Amount": "100000000",
+	"LastLedgerSequence": 980123198,
+	"Fee": "12",
+	"Flags": 2147483648,
+	"Sequence": 2,
+}
+					</code></pre>
+					<p>
+						<small>Fields <span class="highlight-6">TransactionType</span>, 
+							<span class="highlight-6">Account</span>, 
+							<span class="highlight-6">Flags</span>, 
+							<span class="highlight-6">LastLedgerSequence</span>, 
+							<span class="highlight-6">Fee</span> and 
+							<span class="highlight-6">Sequence</span> appear in all transaction types.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<pre data-id="code-animation"><code class="fs-10" data-line-numbers="4,5">{
+	"TransactionType" : "Payment",
+	"Account" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+	"Destination" : "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+	"Amount" : "100000000",
+	"LastLedgerSequence": 980123198,
+	"Fee": "12",
+	"Flags": 2147483648,
+	"Sequence": 2,
+}
+					</code></pre>
+					<p>
+						<small><span class="highlight-6">Destination</span> and <span class="highlight-6">Amount</span> are specific to the Payment transaction type.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<pre data-id="code-animation"><code class="fs-10" data-line-numbers="4,5">{
+	"TransactionType" : "Payment",
+	"Account" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+	"Destination" : "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+	"Amount" : "100000000",
+	"LastLedgerSequence": 980123198,
+	"Fee": "12",
+	"Flags": 2147483648,
+	"Sequence": 2,
+}
+					</code></pre>
+					<p>
+						<small>The example Payment shown above will send 100 XRP from the source account we funded earlier. The destination is our new, not yet funded, address.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Payment Transaction</h3>
+					<pre data-id="code-animation"><code class="fs-10" data-line-numbers="4,5">{
+	"TransactionType" : "Payment",
+	"Account" : "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+	"Destination" : "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+	"Amount" : "100000000",
+	"LastLedgerSequence": 980123198,
+	"Fee": "12",
+	"Flags": 2147483648,
+	"Sequence": 2,
+}
+					</code></pre>
+					<p>
+						<small>Remember that 100 XRP = 100,000,000 drops.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>The rippled <a href="https://xrpl.org/docs/references/http-websocket-apis/public-api-methods/transaction-methods/submit" title="xrpl.org submit transaction" target="_blank" class="highlight-6">submit</a> method applies a transaction and sends it to the network to be confirmed and included in future ledgers.</small>
+					</p>
+					<p>
+						<small>Cryptographically signing the transaction and submitting it to the network can be performed in two independent steps.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>In <span class="highlight-6">XrplJS</span> (an others SDK's), the <span class="highlight-7 cursive">sign()</span> method is always be invoked before <span class="highlight-7 cursive">submit()</span>.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript">const prepared = await client.autofill(paymentTx);	
+const signed = wallet.sign(prepared);
+console.log(signed);		
+{
+	tx_blob: '12000022000000002401E2B096201B01F532BF61D4C38D7EA4C680000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A668400000000000000C69D4C3E871B540C0000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A67321EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2744078AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F81143E5D41D599469FDEDEAD41FDD385EAEA674807A68314F382E0CB0E30DF36825CE54F7E5DEBFFB7F09358',
+	hash: '5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD'
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>In <span class="highlight-6">XrplJS</span> (an others SDK's), the <span class="highlight-7 cursive">sign()</span> method is always be invoked before <span class="highlight-7 cursive">submit()</span>.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript" data-line-numbers="3">{
+	tx_blob: '12000022000000002401E2B096201B01F532BF61D4C38D7EA4C680000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A668400000000000000C69D4C3E871B540C0000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A67321EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2744078AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F81143E5D41D599469FDEDEAD41FDD385EAEA674807A68314F382E0CB0E30DF36825CE54F7E5DEBFFB7F09358',
+	hash: '5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD'
+}</code></pre>
+					<p>
+						<small><span class="highlight-6">hash</span> is the unique id for our transaction.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>In <span class="highlight-6">XrplJS</span> (an others SDK's), the <span class="highlight-7 cursive">sign()</span> method is always be invoked before <span class="highlight-7 cursive">submit()</span>.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript" data-line-numbers="2">{
+	tx_blob: '12000022000000002401E2B096201B01F532BF61D4C38D7EA4C680000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A668400000000000000C69D4C3E871B540C0000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A67321EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2744078AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F81143E5D41D599469FDEDEAD41FDD385EAEA674807A68314F382E0CB0E30DF36825CE54F7E5DEBFFB7F09358',
+	hash: '5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD'
+}</code></pre>
+					<p>
+						<small><span class="highlight-6">tx_blob</span> contains the encoded <a href="https://xrpl.org/docs/references/protocol/binary-format" title="xrpl.org binary format" target="_blank" class="highlight-6">binary format</a> of the transaction.</small>
+					</p>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>If we decode the binary format, we can see that the payload has now a <span class="highlight-6">TxnSignature</span> and a <span class="highlight-6">SingningPubKey</span> field.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="8,9">{
+	TransactionType: 'Payment',
+	Flags: 2147483648,
+	Sequence: 31633558,
+	LastLedgerSequence: 980123198,
+	Amount: '100000000',
+	Fee: '12',
+	SigningPubKey: 'EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2',
+	TxnSignature: '78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F',
+	Account: 'rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn',
+	Destination: 'ra5nK24KXen9AHvsdFTKHSANinZseWnPcX'
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>Anyone in posession of this payload can verify that the transaction has been signed with the public key paired with the <span class="highlight-6">SingningPubKey</span> in the payload.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="8,9">{
+	TransactionType: 'Payment',
+	Flags: 2147483648,
+	Sequence: 31633558,
+	LastLedgerSequence: 980123198,
+	Amount: '100000000',
+	Fee: '12',
+	SigningPubKey: 'EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2',
+	TxnSignature: '78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F',
+	Account: 'rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn',
+	Destination: 'ra5nK24KXen9AHvsdFTKHSANinZseWnPcX'
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>The immediate submit response indicates a provisional result.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="8,9">{
+"result": {
+	"accepted": true,
+	"account_sequence_available": 31633559,
+	"account_sequence_next": 31633559,
+	"applied": true,
+	"broadcast": true,
+	"engine_result": "tesSUCCESS",
+	"engine_result_code": 0,
+	"engine_result_message": "The transaction was applied. Only final in a validated ledger.",
+	"kept": true,
+	"open_ledger_cost": "10",
+	"queued": false,
+	"status": "success",
+	"tx_blob": "12000022000000002401E2B098201B01F5344161D4C38D7EA4C680000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A668400000000000000C69D4C3E871B540C0000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A67321EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F27440EF86603542EE0491FED72ABEA6CB74EF71FC931240A108BCD9A93F40100C982D1211F5320E90BE83ABF3FA8CD62D19741A3EA7B566531CC0ADDD56F947E7AE0181143E5D41D599469FDEDEAD41FDD385EAEA674807A68314F382E0CB0E30DF36825CE54F7E5DEBFFB7F09358",
+	"tx_json": {
+		"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+		"Amount": "100000000",
+		"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+		"Fee": "12",
+		"Flags": 2147483648,
+		"LastLedgerSequence": 980123198,
+		"Sequence": 31633558,
+		"SigningPubKey": "EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2",
+		"TransactionType": "Payment",
+		"TxnSignature": "78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F",
+		"hash": "5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD"
+	},
+	"validated_ledger_index": 32846904
+}
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>The final outcome of a transaction is not known until it appears in a validated ledger.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="8,9">{
+"result": {
+		"accepted": true,
+		"account_sequence_available": 31633559,
+		"account_sequence_next": 31633559,
+		"applied": true,
+		"broadcast": true,
+		"engine_result": "tesSUCCESS",
+		"engine_result_code": 0,
+		"engine_result_message": "The transaction was applied. Only final in a validated ledger.",
+		"kept": true,
+		"open_ledger_cost": "10",
+		"queued": false,
+		"status": "success",
+		"tx_blob": "12000022000000002401E2B098201B01F5344161D4C38D7EA4C680000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A668400000000000000C69D4C3E871B540C0000000000000000000000000004A415600000000003E5D41D599469FDEDEAD41FDD385EAEA674807A67321EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F27440EF86603542EE0491FED72ABEA6CB74EF71FC931240A108BCD9A93F40100C982D1211F5320E90BE83ABF3FA8CD62D19741A3EA7B566531CC0ADDD56F947E7AE0181143E5D41D599469FDEDEAD41FDD385EAEA674807A68314F382E0CB0E30DF36825CE54F7E5DEBFFB7F09358",
+		"tx_json": {
+			"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+			"Amount": "100000000",
+			"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+			"Fee": "12",
+			"Flags": 2147483648,
+			"LastLedgerSequence": 980123198,
+			"Sequence": 31633558,
+			"SigningPubKey": "EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2",
+			"TransactionType": "Payment",
+			"TxnSignature": "78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F",
+			"hash": "5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD"
+		}
+	}
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<section>
+						<h2>Write Ledger Data</h2>
+						<h3 class="highlight-7">Submit Payment Transaction</h3>
+						<p><small>After several seconds the consensus process completes, then query for the final result of the transaction.</small></p>
+						<p class="fragment"><small>It bears repeating: The final outcome of a transaction is not known until it appears in a validated ledger.</small></p>
+						<p class="fragment"><small>Use rippled's <span class="highlight-6">tx</span> command or RPC API, XRPL's <span class="highlight-6 cursive">getTransaction()</span> or <span class="highlight-6 cursive">subscribe</span> to ledger streams.</small></p>
+					</section>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<section>
+						<h2>Write Ledger Data</h2>
+						<h3 class="highlight-7">Submit Payment Transaction</h3>
+						<p><small>A transaction which provisionally returned an error may eventually succeed.</small></p>
+						<p class="fragment"><small>A transaction which provisionally returned success, may eventually fail.</small></p>
+						<p class="fragment"><small>When a transaction appears in a validated ledger, its outcome is immutable. It will never change.</small></p>
+					</section>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="subtitle">Submit Payment Transaction</h3>
+					<p>
+						<small>The final outcome of a transaction is not known until it appears in a validated ledger: look for <span class="highlight-6">validated: true</span>.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="45">{
+"result": {
+		"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+		"Amount": "100000000",
+		"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+		"Fee": "12",
+		"Flags": 2147483648,
+		"LastLedgerSequence": 980123198,
+		"Sequence": 31633558,
+		"SigningPubKey": "EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2",
+		"TransactionType": "Payment",
+		"TxnSignature": "78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F",
+		"ctid": "C1F5343A0000021F",
+		"date": 783440613,
+		"hash": "5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD",
+		"inLedger": 980123196,
+		"ledger_index": 980123196,
+		"meta": {
+			"AffectedNodes": [
+				{
+					"ModifiedNode": {
+						"FinalFields": {
+							"Account": "ragkcW1G9kUkRN7j27eTxtppQ6yqdtM7pT",
+							"Balance": "9899999952",
+							"Flags": 0,
+							"OwnerCount": 0,
+							"Sequence": 31633558
+						},
+						"LedgerEntryType": "AccountRoot",
+						"LedgerIndex": "5D011729C8365380F999C5EB832BF07242A37FFF924EFFB6905FA4A178206271",
+						"PreviousFields": {
+							"Balance": "9999999952",
+							"Sequence": 31633557
+						},
+						"PreviousTxnID": "41B2E698557153168011C66EB3F22EB1847FB6B26E35F86E5DD2A7D82A0229A8",
+						"PreviousTxnLgrSeq": 980123191
+					}
+				}
+			],
+			"TransactionIndex": 0,
+			"TransactionResult": "tesSUCCESS",
+			"delivered_amount": "100000000"
+		},
+		"status": "success",
+		"validated": true
+	}
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>Validated payment transactions have a <span class="highlight-6">deliveredAmount</span>.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="42">{
+"result": {
+		"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+		"Amount": "100000000",
+		"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+		"Fee": "12",
+		"Flags": 2147483648,
+		"LastLedgerSequence": 980123198,
+		"Sequence": 31633558,
+		"SigningPubKey": "EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2",
+		"TransactionType": "Payment",
+		"TxnSignature": "78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F",
+		"ctid": "C1F5343A0000021F",
+		"date": 783440613,
+		"hash": "5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD",
+		"inLedger": 980123196,
+		"ledger_index": 980123196,
+		"meta": {
+			"AffectedNodes": [
+				{
+					"ModifiedNode": {
+						"FinalFields": {
+							"Account": "ragkcW1G9kUkRN7j27eTxtppQ6yqdtM7pT",
+							"Balance": "9899999952",
+							"Flags": 0,
+							"OwnerCount": 0,
+							"Sequence": 31633558
+						},
+						"LedgerEntryType": "AccountRoot",
+						"LedgerIndex": "5D011729C8365380F999C5EB832BF07242A37FFF924EFFB6905FA4A178206271",
+						"PreviousFields": {
+							"Balance": "9999999952",
+							"Sequence": 31633557
+						},
+						"PreviousTxnID": "41B2E698557153168011C66EB3F22EB1847FB6B26E35F86E5DD2A7D82A0229A8",
+						"PreviousTxnLgrSeq": 980123191
+					}
+				}
+			],
+			"TransactionIndex": 0,
+			"TransactionResult": "tesSUCCESS",
+			"delivered_amount": "100000000"
+		},
+		"status": "success",
+		"validated": true
+	}
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>Inspect the <span class="highlight-6">delivered_amount</span>, not the <span class="highlight-7">Amount</span>, when handling payments.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="42">{
+"result": {
+		"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+		"Amount": "100000000",
+		"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+		"Fee": "12",
+		"Flags": 2147483648,
+		"LastLedgerSequence": 980123198,
+		"Sequence": 31633558,
+		"SigningPubKey": "EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2",
+		"TransactionType": "Payment",
+		"TxnSignature": "78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F",
+		"ctid": "C1F5343A0000021F",
+		"date": 783440613,
+		"hash": "5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD",
+		"inLedger": 980123196,
+		"ledger_index": 980123196,
+		"meta": {
+			"AffectedNodes": [
+				{
+					"ModifiedNode": {
+						"FinalFields": {
+							"Account": "ragkcW1G9kUkRN7j27eTxtppQ6yqdtM7pT",
+							"Balance": "9899999952",
+							"Flags": 0,
+							"OwnerCount": 0,
+							"Sequence": 31633558
+						},
+						"LedgerEntryType": "AccountRoot",
+						"LedgerIndex": "5D011729C8365380F999C5EB832BF07242A37FFF924EFFB6905FA4A178206271",
+						"PreviousFields": {
+							"Balance": "9999999952",
+							"Sequence": 31633557
+						},
+						"PreviousTxnID": "41B2E698557153168011C66EB3F22EB1847FB6B26E35F86E5DD2A7D82A0229A8",
+						"PreviousTxnLgrSeq": 980123191
+					}
+				}
+			],
+			"TransactionIndex": 0,
+			"TransactionResult": "tesSUCCESS",
+			"delivered_amount": "100000000"
+		},
+		"status": "success",
+		"validated": true
+	}
+}</code></pre>
+				</section>
+
+				<section data-auto-animate data-background="#89960c">
+					<h2>Write Ledger Data</h2>
+					<h3 class="highlight-7">Submit Payment Transaction</h3>
+					<p>
+						<small>The <span class="highlight-6">hash</span> is the transaction's permanent unique identifier. The combination of address and sequence together also uniquely identifies this transaction.</small>
+					</p>
+					<pre data-id="code-animation"><code class="fs-10 javascript"  data-line-numbers="15">{
+"result": {
+		"Account": "rf1BiGeXwwQoi8Z2ueFYTEXSwuJYfV2Jpn",
+		"Amount": "100000000",
+		"Destination": "ra5nK24KXen9AHvsdFTKHSANinZseWnPcX",
+		"Fee": "12",
+		"Flags": 2147483648,
+		"LastLedgerSequence": 980123198,
+		"Sequence": 31633558,
+		"SigningPubKey": "EDB7F651D80C1996E55A100EDCE1BF815C491EF50D6A9EBDBEC16AD50849E031F2",
+		"TransactionType": "Payment",
+		"TxnSignature": "78AE3734AB812F248C8A99E1F6A53C5A16501E1C52710ED0DAC069F853643E78A72641210AECF23DD4BE799581D1A0A9FDEE64B468B973800C03A7657520610F",
+		"ctid": "C1F5343A0000021F",
+		"date": 783440613,
+		"hash": "5D99761206E0B8727CD37314E76FD8440F8E0BD6372FBFC8DE598BD4B45625CD",
+		"inLedger": 980123196,
+		"ledger_index": 980123196,
+		"meta": {
+			"AffectedNodes": [
+				{
+					"ModifiedNode": {
+						"FinalFields": {
+							"Account": "ragkcW1G9kUkRN7j27eTxtppQ6yqdtM7pT",
+							"Balance": "9899999952",
+							"Flags": 0,
+							"OwnerCount": 0,
+							"Sequence": 31633558
+						},
+						"LedgerEntryType": "AccountRoot",
+						"LedgerIndex": "5D011729C8365380F999C5EB832BF07242A37FFF924EFFB6905FA4A178206271",
+						"PreviousFields": {
+							"Balance": "9999999952",
+							"Sequence": 31633557
+						},
+						"PreviousTxnID": "41B2E698557153168011C66EB3F22EB1847FB6B26E35F86E5DD2A7D82A0229A8",
+						"PreviousTxnLgrSeq": 980123191
+					}
+				}
+			],
+			"TransactionIndex": 0,
+			"TransactionResult": "tesSUCCESS",
+			"delivered_amount": "100000000"
+		},
+		"status": "success",
+		"validated": true
+	}
+}</code></pre>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+
+			// Also available as an ES module, see:
+			// https://revealjs.com/initialization/
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				center: true,
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight ]
+			});
+
+		</script>
+
+	</body>
+</html>

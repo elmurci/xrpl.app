@@ -1,18 +1,32 @@
 import React from 'react';
-import { ArrowUpRight, Clock } from 'lucide-react';
+import { ArrowUpRight, Clock, ExternalLink } from 'lucide-react';
 
 interface CardProps {
   title: string;
   description: string;
-  onClick: () => void;
+  onClick?: () => void;
+  link?: string;
   colorClass: string;
   isPlaceholder?: boolean;
 }
 
-export function Card({ title, description, onClick, colorClass, isPlaceholder = false }: CardProps) {
+export function Card({ title, description, onClick, link, colorClass, isPlaceholder = false }: CardProps) {
+  const handleInteraction = (e: React.MouseEvent) => {
+    if (isPlaceholder) return;
+    if (link) {
+      e.preventDefault();
+      window.open(link, '_blank');
+    } else if (onClick) {
+      onClick();
+    }
+  };
+
+  const Component = link ? 'a' : 'button';
+
   return (
-    <button 
-      onClick={onClick}
+    <Component 
+      onClick={handleInteraction}
+      href={link || undefined}
       className={`w-full text-left group relative p-8 h-[280px] rounded-2xl overflow-hidden transition-all duration-500
         ${isPlaceholder 
           ? 'bg-gradient-to-br from-white/5 to-transparent cursor-default' 
@@ -35,7 +49,11 @@ export function Card({ title, description, onClick, colorClass, isPlaceholder = 
             )}
           </div>
           {!isPlaceholder && (
-            <ArrowUpRight className="text-white/50 w-6 h-6 transform translate-x-2 -translate-y-2 group-hover:translate-x-3 group-hover:-translate-y-3 transition-transform duration-300" />
+            link ? (
+              <ExternalLink className="text-white/50 w-6 h-6 transform translate-x-2 -translate-y-2 group-hover:translate-x-3 group-hover:-translate-y-3 transition-transform duration-300" />
+            ) : (
+              <ArrowUpRight className="text-white/50 w-6 h-6 transform translate-x-2 -translate-y-2 group-hover:translate-x-3 group-hover:-translate-y-3 transition-transform duration-300" />
+            )
           )}
         </div>
         
@@ -55,6 +73,6 @@ export function Card({ title, description, onClick, colorClass, isPlaceholder = 
           <div className="absolute bottom-8 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         )}
       </div>
-    </button>
+    </Component>
   );
 }

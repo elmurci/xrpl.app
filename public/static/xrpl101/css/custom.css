@@ -1,0 +1,56 @@
+.fs-34 {
+    font-size: 34pt;
+}
+
+.fs-12 {
+    font-size: 12pt;
+}
+
+.fs-10 {
+    font-size: 10pt;
+}
+
+.cursive {
+    font-style: italic;
+}
+
+.light {
+    color: rgb(135, 132, 134);
+}
+
+.highlight-1 {
+    color: rgb(235, 107, 192);
+}
+
+.highlight-2 {
+    color: rgb(246, 166, 219);
+}
+
+.highlight-3 {
+    color: rgb(240, 201, 70) !important;
+}
+
+.highlight-4 {
+    color: rgb(244, 220, 139) !important;
+}
+
+.highlight-5 {
+    color: rgb(199, 226, 250) !important;
+}
+
+.highlight-6 {
+    color: rgb(232, 250, 231) !important;
+}
+
+.highlight-7 {
+    color: rgb(251, 213, 153) !important;
+}
+
+a[target="_blank"] {
+     position: relative;
+}
+
+a[target="_blank"]::after {
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+    margin: 0px 3px 0px 5px;
+}

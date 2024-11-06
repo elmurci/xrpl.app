@@ -1,3 +1,4 @@
+import React from 'react';
 import { X } from 'lucide-react';
 
 interface ModalProps {
@@ -44,6 +45,10 @@ export function Modal({ isOpen, onClose, title, description, colorClass }: Modal
             <h3 className="text-xl font-semibold text-white mb-3">Public Key</h3>
             <p className="text-white/70">
               nHUWpuUAaL7d6BKgzU7ttADu9UbeFUSnxMh4wESSBpATascVDUUm
+            </p>
+            <h3 className="text-xl font-semibold text-white mb-3 mt-3">TOML File</h3>
+            <p className="text-white/70">
+              <a href="https://validator.xrpl.app" title="xrpl.app" target="_blank">https://validator.xrpl.app</a>
             </p>
           </div>
         </div>
